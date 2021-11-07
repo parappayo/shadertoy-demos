@@ -55,17 +55,26 @@ void mazeTile(
     outFragColor);
 }
 
+// https://en.wikipedia.org/wiki/Linear_congruential_generator
+int rand(int prev) {
+  return (75 * prev + 74) % ((2 << 16) + 1);
+}
 
 void mainImage( out vec4 outFragColor, in vec2 inFragCoord )
 {
-  float tileSize = 30.0;
+  float tileSize = 20.0;
   float strokeThickness = 3.0;
   vec4 strokeColor = vec4(1, 1, 1, 1);
 
-  for (int y = 0; y < 10; y++) {
-    for (int x = 0; x < 10; x++) {
+  int prevRand = rand(int(iTime / 1.0));
+
+  for (int y = 0; y < 20; y++) {
+    for (int x = 0; x < 35; x++) {
       vec2 tileCoord = vec2(x, y) * tileSize;
-      bool flip = x % 2 == 0;
+
+      int nextRand = rand(prevRand);
+      bool flip = nextRand % 2 == 0;
+      prevRand = nextRand;
 
       mazeTile(
         inFragCoord,
