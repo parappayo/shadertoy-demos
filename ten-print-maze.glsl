@@ -60,13 +60,21 @@ int rand(int prev) {
   return (75 * prev + 74) % ((2 << 16) + 1);
 }
 
+int nthRand(int seed, int n)
+{
+  int result = seed;
+  for (int i = 0; i < n; i++) {
+    result = rand(result);
+  }
+  return result;
+}
+
 void mainImage( out vec4 outFragColor, in vec2 inFragCoord )
 {
   float tileSize = 20.0;
   float strokeThickness = 3.0;
   vec4 strokeColor = vec4(1, 1, 1, 1);
 
-  int randValue = rand(int(iTime / 1.0));
 
   // tile coordinate space
   int x = int(inFragCoord.x / tileSize);
@@ -75,9 +83,7 @@ void mainImage( out vec4 outFragColor, in vec2 inFragCoord )
   int tileIndex = y * width + x;
   vec2 tileCoord = vec2(x, y) * tileSize;
 
-  for (int i = 0; i < tileIndex; i++) {
-    randValue = rand(randValue);
-  }
+  int randValue = nthRand(int(iTime / 1.0), tileIndex);
   bool flip = randValue % 2 == 0;
 
   mazeTile(
