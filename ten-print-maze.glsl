@@ -66,25 +66,27 @@ void mainImage( out vec4 outFragColor, in vec2 inFragCoord )
   float strokeThickness = 3.0;
   vec4 strokeColor = vec4(1, 1, 1, 1);
 
-  int prevRand = rand(int(iTime / 1.0));
+  int randValue = rand(int(iTime / 1.0));
 
-  for (int y = 0; y < 20; y++) {
-    for (int x = 0; x < 35; x++) {
-      vec2 tileCoord = vec2(x, y) * tileSize;
+  // tile coordinate space
+  int x = int(inFragCoord.x / tileSize);
+  int y = int(inFragCoord.y / tileSize);
+  int width = int(iResolution.x / tileSize);
+  int tileIndex = y * width + x;
+  vec2 tileCoord = vec2(x, y) * tileSize;
 
-      int nextRand = rand(prevRand);
-      bool flip = nextRand % 2 == 0;
-      prevRand = nextRand;
-
-      mazeTile(
-        inFragCoord,
-        tileCoord,
-        tileSize,
-        flip,
-        strokeThickness,
-        strokeColor,
-        outFragColor
-      );
-    }
+  for (int i = 0; i < tileIndex; i++) {
+    randValue = rand(randValue);
   }
+  bool flip = randValue % 2 == 0;
+
+  mazeTile(
+    inFragCoord,
+    tileCoord,
+    tileSize,
+    flip,
+    strokeThickness,
+    strokeColor,
+    outFragColor
+  );
 }
